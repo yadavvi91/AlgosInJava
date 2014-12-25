@@ -52,12 +52,26 @@ public class BruteForce {
 		KMP kmp = new KMP(pattern.toCharArray());
 		value = kmp.search(text);
 		System.out.println("The KMP pattern is found at: " + value);
+
+		value = kmp.searchOther(text);
+		System.out.println("The Other KMP pattern is found at: " + value);
 	}
 }
 
 class KMP {
 	
 	char[] pattern;
+	/**
+	 * DFA keeps track of the state changes when a new character is encountered.
+	 * <p>
+	 * It is defined as --> <tt>int[][] dfa = new int[R][M];</tt> where <i>R</i>
+	 * is the character set (usually 256 chars 0 to 255 for UTF-8) and <i>M</i>
+	 * is the size of pattern.
+	 * <p>
+	 * What this means is, if you are in state  <b><i>m</i></b>  and you encounter a
+	 * character  <b><i>r</i></b>,  what would be your next state? The next state is
+	 * stored in - dfa[<b><i>m</i></b>][<b><i>r</i></b>].
+	 */
 	int[][] dfa;
 	char[] distinctChars;
 	
@@ -108,7 +122,22 @@ class KMP {
 		if (j == M) return i - j;
 		return N;
 	}
-	
+
+	public int searchOther(String text) {
+		int i, N = text.length();
+		int j, M = pattern.length;
+
+		for (i = 0, j = 0; i < N && j < M; i++) {
+			if (text.charAt(i) == pattern[j]) {
+				j = dfa[text.charAt(i)][j];
+			} else {
+				j = dfa[text.charAt(i)][j];
+			}
+		}
+		if (j == M) return i - j;
+		return N;
+	}
+
 	private void getDistinctChars() {
 		int i, j;
 		int M = pattern.length;
