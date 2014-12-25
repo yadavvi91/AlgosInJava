@@ -1,5 +1,7 @@
 package com.yadavvi.stringsearch;
 
+import java.util.Arrays;
+
 public class BruteForce {
 
 	public int search(String pattern, String text) {
@@ -31,8 +33,12 @@ public class BruteForce {
 	}
 
 	public static void main(String[] args) {
+		/*String text = "abacadabrabracabracadabrabrabracad";
+		String pattern = "abra";*/
+		/*String text = "AAAAAAAAAB";
+		String pattern = "AAAAB";*/
 		String text = "abacadabrabracabracadabrabrabracad";
-		String pattern = "abra";
+		String pattern = "abracadabra";
 
 		BruteForce bf = new BruteForce();
 		int value;
@@ -42,5 +48,123 @@ public class BruteForce {
 		
 		value = bf.searchOther(pattern, text);
 		System.out.println("The Other pattern is found at: " + value);
+		
+		KMP kmp = new KMP(pattern.toCharArray());
+		value = kmp.search(text);
+		System.out.println("The KMP pattern is found at: " + value);
 	}
 }
+
+class KMP {
+	
+	char[] pattern;
+	int[][] dfa;
+	
+	public KMP(char[] pat) {
+		int M = pat.length;
+		pattern = new char[M];
+		for (int i = 0; i < M; i++)
+			pattern[i] = pat[i];
+		
+		char[] sortedPattern = new char[M];
+		for (int i = 0; i < M; i++)
+			sortedPattern[i] = pattern[i];
+		Arrays.sort(sortedPattern);
+
+		int count = 1;
+		for (int i = 1; i < M; i++) {
+			while (i < M && sortedPattern[i] == sortedPattern[i - 1])
+				i++;
+			count++;
+		}
+		
+		char[] distinctChars = new char[count];
+		distinctChars[0] = sortedPattern[0];
+		for (int i = 0, j = 0; i < M; i++) {
+			if (distinctChars[j] != sortedPattern[i]) {
+				j++;
+				distinctChars[j] = sortedPattern[i];
+			}
+		}
+		
+		// M and R give the "length of pattern" and "no. of chars" respectively.
+		// Here, M's value is already defined above.
+		int R = 256;
+		dfa = new int[R][M];
+		
+		// Populate all the elements that lead to next state.
+		for (int i = 0; i < M; i++)
+			dfa[pattern[i]][i] = i + 1;
+
+		for (int i = 0; i < R; i++) {
+			if (pattern[0] != i)
+				dfa[i][0] = 0;
+		}
+		
+		int X = 0;
+		int i, j;
+		for (i = 1; i < M; i++) {
+			for (j = 0; j < R; j++) {
+				if (pattern[i] != j)
+					dfa[j][i] = dfa[j][X];
+			}
+			X = dfa[pattern[i]][X];
+		}
+		
+		System.out.print("* ");
+		for (i = 0; i < M; i++)
+			System.out.print(pattern[i] + " ");
+		System.out.println();
+		
+		for (i = 0; i < count; i++) {
+			System.out.print(distinctChars[i] + " ");
+			for (j = 0; j < M; j++)
+				System.out.print(dfa[distinctChars[i]][j] + " ");
+			System.out.println();
+		}
+	}
+	
+	public int search(String text) {
+		int i, N = text.length();
+		int j, M = pattern.length;
+		
+		for (i = 0, j = 0; i < N && j < M; i++) {
+			if (j < M && dfa[text.charAt(i)][j] == j + 1) j++;
+			else if (j == M) break; 
+			else j = 0;
+		}
+		if (j == M) return i - j;
+		return N;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
