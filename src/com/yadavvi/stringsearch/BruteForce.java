@@ -59,39 +59,21 @@ class KMP {
 	
 	char[] pattern;
 	int[][] dfa;
+	char[] distinctChars;
 	
 	public KMP(char[] pat) {
 		int M = pat.length;
 		pattern = new char[M];
 		for (int i = 0; i < M; i++)
 			pattern[i] = pat[i];
-		
-		char[] sortedPattern = new char[M];
-		for (int i = 0; i < M; i++)
-			sortedPattern[i] = pattern[i];
-		Arrays.sort(sortedPattern);
 
-		int count = 1;
-		for (int i = 1; i < M; i++) {
-			while (i < M && sortedPattern[i] == sortedPattern[i - 1])
-				i++;
-			count++;
-		}
-		
-		char[] distinctChars = new char[count];
-		distinctChars[0] = sortedPattern[0];
-		for (int i = 0, j = 0; i < M; i++) {
-			if (distinctChars[j] != sortedPattern[i]) {
-				j++;
-				distinctChars[j] = sortedPattern[i];
-			}
-		}
-		
+		getDistinctChars();
+
 		// M and R give the "length of pattern" and "no. of chars" respectively.
 		// Here, M's value is already defined above.
 		int R = 256;
 		dfa = new int[R][M];
-		
+
 		// Populate all the elements that lead to next state.
 		for (int i = 0; i < M; i++)
 			dfa[pattern[i]][i] = i + 1;
@@ -100,7 +82,7 @@ class KMP {
 			if (pattern[0] != i)
 				dfa[i][0] = 0;
 		}
-		
+
 		int X = 0;
 		int i, j;
 		for (i = 1; i < M; i++) {
@@ -110,18 +92,8 @@ class KMP {
 			}
 			X = dfa[pattern[i]][X];
 		}
-		
-		System.out.print("* ");
-		for (i = 0; i < M; i++)
-			System.out.print(pattern[i] + " ");
-		System.out.println();
-		
-		for (i = 0; i < count; i++) {
-			System.out.print(distinctChars[i] + " ");
-			for (j = 0; j < M; j++)
-				System.out.print(dfa[distinctChars[i]][j] + " ");
-			System.out.println();
-		}
+
+		printDFA();
 	}
 	
 	public int search(String text) {
@@ -136,35 +108,48 @@ class KMP {
 		if (j == M) return i - j;
 		return N;
 	}
+	
+	private void getDistinctChars() {
+		int i, j;
+		int M = pattern.length;
+
+		char[] sortedPattern = new char[M];
+		for (i = 0; i < M; i++)
+			sortedPattern[i] = pattern[i];
+		Arrays.sort(sortedPattern);
+
+		int count = 1;
+		for (i = 1; i < M; i++) {
+			while (i < M && sortedPattern[i] == sortedPattern[i - 1])
+				i++;
+			count++;
+		}
+
+		distinctChars = new char[count];
+		distinctChars[0] = sortedPattern[0];
+		for (i = 0, j = 0; i < M; i++) {
+			if (distinctChars[j] != sortedPattern[i]) {
+				j++;
+				distinctChars[j] = sortedPattern[i];
+			}
+		}
+	}
+
+	public void printDFA() {
+		int i, j;
+		int M = pattern.length;
+		int count = distinctChars.length;
+
+		System.out.printf("     ");
+		for (i = 0; i < M; i++)
+			System.out.printf("%5c", pattern[i]);
+		System.out.println();
+
+		for (i = 0; i < count; i++) {
+			System.out.printf("%5c", distinctChars[i]);
+			for (j = 0; j < M; j++)
+				System.out.printf("%5d", dfa[distinctChars[i]][j]);
+			System.out.println();
+		}
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
