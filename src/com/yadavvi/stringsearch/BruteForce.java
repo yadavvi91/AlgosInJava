@@ -127,14 +127,10 @@ class KMP {
 		int i, N = text.length();
 		int j, M = pattern.length;
 
-		for (i = 0, j = 0; i < N && j < M; i++) {
-			if (text.charAt(i) == pattern[j]) {
-				j = dfa[text.charAt(i)][j];
-			} else {
-				j = dfa[text.charAt(i)][j];
-			}
-		}
-		if (j == M) return i - j;
+		for (i = 0, j = 0; i < N && j < M; i++)
+			j = dfa[text.charAt(i)][j];
+		
+		if (j == M) return i - M;
 		return N;
 	}
 
