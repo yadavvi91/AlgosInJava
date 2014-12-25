@@ -6,12 +6,12 @@ public class BruteForce {
 		int i, N = text.length();
 		int j, M = pattern.length();
 		
-		for (i = 0; i < N; i++) {
+		for (i = 0; i < N; i++) { // implicit backup
 			for (j = 0; j < M; ) {
 				if (pattern.charAt(j) == text.charAt(i + j)) j++;
 				else break;
 			}
-			if (j == M) return i + 1;
+			if (j == M) return i;
 		}
 		
 		return N;
@@ -22,19 +22,12 @@ public class BruteForce {
 		int j, M = pattern.length();
 		
 		for (i = 0, j = 0; i < N && j < M; i++) {
-			if (pattern.charAt(j) == text.charAt(i)) {
-				i++;
-				j++;
-			}
-
-			if (j == M) {
-				return i - j + 1;
-			} else {
-				i -= (j - 1);
-				j = 0;
-			}
+			if (text.charAt(i) == pattern.charAt(j)) j++;
+			else { i -= j; j = 0; } // explicit backup
 		}
-		return N;
+		
+		if (j == M) return i - j;
+		else 		return N;
 	}
 
 	public static void main(String[] args) {
