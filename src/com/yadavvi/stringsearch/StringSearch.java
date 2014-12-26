@@ -25,5 +25,10 @@ public class StringSearch {
 
 		value = kmp.searchOther(text);
 		System.out.println("The Other KMP pattern is found at: " + value);
+
+		BoyerMoore bm = new BoyerMoore(pattern);
+		value = bm.search(text);
+		System.out.println("The Boyer Moore pattern is found at: " + value);
+
 	}
 }
