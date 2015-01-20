@@ -10,14 +10,14 @@ import com.yadavvi.treewoq.LeastCommonAncestor;
 
 public class LeastCommonAncestorTest {
 
-	@Test
+	/*@Test
 	public void testOneItem() {
 		LeastCommonAncestor lcs = new LeastCommonAncestor(Arrays.asList(1));
 		assertEquals(1,
 				LeastCommonAncestor.getLeastCommonAncestor(lcs.root, 1, 1));
 	}
 
-	/*@Test
+	@Test
 	public void testTwoItem() {
 		LeastCommonAncestor lcs = new LeastCommonAncestor(Arrays.asList(1, 2));
 		assertEquals(1,
@@ -62,5 +62,6 @@ public class LeastCommonAncestorTest {
 				40, 10, 25, 35, 50, 5, 15, 23, 28, 33, 38, 41, 55));
 		assertEquals(30,
 				LeastCommonAncestor.getLeastCommonAncestor(lcs.root, 25, 40));
+		LeastCommonAncestor.prettyPrintTree(lcs.root);
 	}
 }

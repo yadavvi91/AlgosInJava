@@ -1,7 +1,10 @@
 package com.yadavvi.treewoq;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class LeastCommonAncestor {
 
@@ -73,12 +76,13 @@ public class LeastCommonAncestor {
 			throw (new IllegalArgumentException("root shouldn't be null"));
 		}
 
+		// System.out.println(getUnderScores(4));
 		TreeNode node = root;
 		while (node != null) {
 			if (node.value == p || node.value == q)
 				return node.value;
 			if ((node.value < p && node.value > q)
-					&& (node.value < q && node.value > p)) {
+					|| (node.value < q && node.value > p)) {
 				return node.value;
 			}
 
@@ -131,10 +135,95 @@ public class LeastCommonAncestor {
 		return spaceBetweenNodesStringBuilder.toString();
 	}
 	
+	private static void printNodes(Queue<TreeNode> queueOfNodes,
+			int noOfNodesAtCurrentHeight, int height) {
+		StringBuilder nodesAtHeight = new StringBuilder();
+		String startSpace = getStartingSpace(height);
+		String spaceBetweenTwoNodes = getSpaceBetweenTwoNodes(height);
+
+		nodesAtHeight.append(startSpace);
+
+		Iterator<TreeNode> iter = queueOfNodes.iterator();
+		for (int i = 0; i < noOfNodesAtCurrentHeight; i++) {
+			TreeNode node = iter.next();
+			queueOfNodes.add(node.left);
+			queueOfNodes.add(node.right);
+			nodesAtHeight.append(String.format("%5d", node.value));
+			nodesAtHeight.append(spaceBetweenTwoNodes);
+		}
+		nodesAtHeight.substring(0, nodesAtHeight.length()
+				- spaceBetweenTwoNodes.length());
+		
+		// nodesAtHeight.delete(0,
+		//		nodesAtHeight.length() - spaceBetweenTwoNodes.length());
+		
+		System.out.println(nodesAtHeight.toString());
+	}
 	
-	/*public static void main(String[] args) {
-		LeastCommonAncestor lca = new LeastCommonAncestor(Arrays.asList(4, 6,
+	private static String getSpaceBetweenLeftRightBranch(int height) {
+		int noOfNodesBetweenLeftRightBranch = ((int) Math.pow(2, height - 1) - 1);
+
+		StringBuilder spaceBetweenLeftRightStringBuilder = new StringBuilder();
+		for (int i = 0; i < noOfNodesBetweenLeftRightBranch; i++) {
+			spaceBetweenLeftRightStringBuilder.append("  ");
+		}
+		return spaceBetweenLeftRightStringBuilder.toString();
+	}
+	
+	private static String getSpaceBetweenRightLeftBranch(int height) {
+		int noOfNodesBetweenLeftRightBranch = (int) Math.pow(2, height - 1);
+
+		StringBuilder spaceBetweenLeftRightStringBuilder = new StringBuilder();
+		for (int i = 0; i < noOfNodesBetweenLeftRightBranch; i++) {
+			spaceBetweenLeftRightStringBuilder.append("  ");
+		}
+		return spaceBetweenLeftRightStringBuilder.toString();
+	}
+
+	private static void printBranches(Queue<TreeNode> queueOfNodes,
+			int noOfNodesAtCurrentHeight, int height) {
+		StringBuilder brachesAtHeight = new StringBuilder();
+
+		String startSpace = getStartingSpace(height);
+		startSpace.substring(0, startSpace.length() - 1);
+		String leftRightSpace = getSpaceBetweenLeftRightBranch(height);
+		String rightLeftSpace = getSpaceBetweenRightLeftBranch(height);
+
+		brachesAtHeight.append(startSpace);
+
+		for (int i = 0; i < noOfNodesAtCurrentHeight; i++) {
+			brachesAtHeight.append("/").append(leftRightSpace).append("\\")
+					.append(rightLeftSpace);
+		}
+		brachesAtHeight.substring(0,
+				brachesAtHeight.length() - rightLeftSpace.length());
+
+		System.out.println(brachesAtHeight.toString());
+	}
+	
+	public static void prettyPrintTree(TreeNode root) {
+		Queue<TreeNode> queueOfNodes = new LinkedList<>();
+		int height = getMaximumHeight(root);
+		int level = 0;
+		int noOfNodesAtCurrentHeight = 0;
+		
+		queueOfNodes.add(root);
+
+		while (!queueOfNodes.isEmpty()) {
+			noOfNodesAtCurrentHeight = ((int) Math.pow(2, level));
+			printNodes(queueOfNodes, noOfNodesAtCurrentHeight, height - level);
+			printBranches(queueOfNodes, noOfNodesAtCurrentHeight, height - level);
+			for (int i = 0; i < noOfNodesAtCurrentHeight; i++)
+				queueOfNodes.remove();
+			level++;
+		}
+	}
+	public static void main(String[] args) {
+		/*LeastCommonAncestor lca = new LeastCommonAncestor(Arrays.asList(4, 6,
 				12, 24, 8, 9, 1, 3));
-		LeastCommonAncestor.printTree(lca.root);
-	}*/
+		LeastCommonAncestor.printTree(lca.root);*/
+		LeastCommonAncestor lcs = new LeastCommonAncestor(Arrays.asList(30, 20,
+				40, 10, 25, 35, 50, 5, 15, 23, 28, 33, 38, 41, 55));
+		LeastCommonAncestor.prettyPrintTree(lcs.root);
+	}
 }
