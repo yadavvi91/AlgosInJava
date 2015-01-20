@@ -1,10 +1,8 @@
 package com.yadavvi.treewoq;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public class LeastCommonAncestor {
 
@@ -99,7 +97,6 @@ public class LeastCommonAncestor {
 		return (leftHeight > rightHeight) ? leftHeight + 1 : rightHeight + 1;
 	}
 
-
 	private static String getStartingSpace(int height) {
 		int noOfSpaces = ((int) Math.pow(2, height - 1)) / 2;
 
@@ -110,56 +107,59 @@ public class LeastCommonAncestor {
 		}
 		return startSpaceStringBuilder.toString();
 	}
-	
+
 	private static String getUnderScores(int height) {
 		int noOfElementsToLeft = ((int) Math.pow(2, height) - 1) / 2;
-		int noOfUnderScores = noOfElementsToLeft - ((int) Math.pow(2, height - 1) / 2);
-		
+		int noOfUnderScores = noOfElementsToLeft
+				- ((int) Math.pow(2, height - 1) / 2);
+
 		StringBuilder underScoreStringBuilder = new StringBuilder();
 		for (int i = 0; i < noOfUnderScores; i++) {
-			// No. of underscores added everytime is the width of every node value
+			// No. of underscores added everytime is the width of every node
+			// value
 			underScoreStringBuilder.append("__");
 		}
 		return underScoreStringBuilder.toString();
 	}
-	
+
 	private static String getSpaceBetweenTwoNodes(int height) {
 		int noOfNodesInSubTreeOfNode = ((int) Math.pow(2, height - 1)) / 2;
 		/** Sum of spaces of the subtrees of nodes + the parent node */
 		int noOfSpacesBetweenTwoNodes = noOfNodesInSubTreeOfNode * 2 + 1;
-		
+
 		StringBuilder spaceBetweenNodesStringBuilder = new StringBuilder();
 		for (int i = 0; i < noOfSpacesBetweenTwoNodes; i++) {
 			spaceBetweenNodesStringBuilder.append("  ");
 		}
 		return spaceBetweenNodesStringBuilder.toString();
 	}
-	
-	private static void printNodes(Queue<TreeNode> queueOfNodes,
+
+	private static void printNodes(LinkedList<TreeNode> queueOfNodes,
 			int noOfNodesAtCurrentHeight, int height) {
 		StringBuilder nodesAtHeight = new StringBuilder();
 		String startSpace = getStartingSpace(height);
 		String spaceBetweenTwoNodes = getSpaceBetweenTwoNodes(height);
+		String underScore = getUnderScores(height);
 
 		nodesAtHeight.append(startSpace);
 
-		Iterator<TreeNode> iter = queueOfNodes.iterator();
 		for (int i = 0; i < noOfNodesAtCurrentHeight; i++) {
-			TreeNode node = iter.next();
+			TreeNode node = (TreeNode) queueOfNodes.get(i);
+			if (node == null)
+				continue;
 			queueOfNodes.add(node.left);
 			queueOfNodes.add(node.right);
-			nodesAtHeight.append(String.format("%5d", node.value));
+			nodesAtHeight.append(underScore);
+			nodesAtHeight.append(String.format("%2d", node.value));
+			nodesAtHeight.append(underScore);
 			nodesAtHeight.append(spaceBetweenTwoNodes);
 		}
 		nodesAtHeight.substring(0, nodesAtHeight.length()
 				- spaceBetweenTwoNodes.length());
-		
-		// nodesAtHeight.delete(0,
-		//		nodesAtHeight.length() - spaceBetweenTwoNodes.length());
-		
+
 		System.out.println(nodesAtHeight.toString());
 	}
-	
+
 	private static String getSpaceBetweenLeftRightBranch(int height) {
 		int noOfNodesBetweenLeftRightBranch = ((int) Math.pow(2, height - 1) - 1);
 
@@ -169,7 +169,7 @@ public class LeastCommonAncestor {
 		}
 		return spaceBetweenLeftRightStringBuilder.toString();
 	}
-	
+
 	private static String getSpaceBetweenRightLeftBranch(int height) {
 		int noOfNodesBetweenLeftRightBranch = (int) Math.pow(2, height - 1);
 
@@ -180,16 +180,19 @@ public class LeastCommonAncestor {
 		return spaceBetweenLeftRightStringBuilder.toString();
 	}
 
-	private static void printBranches(Queue<TreeNode> queueOfNodes,
+	private static void printBranches(LinkedList<TreeNode> queueOfNodes,
 			int noOfNodesAtCurrentHeight, int height) {
+		if (height <= 1)
+			return;
 		StringBuilder brachesAtHeight = new StringBuilder();
 
 		String startSpace = getStartingSpace(height);
-		startSpace.substring(0, startSpace.length() - 1);
+		// startSpace.substring(0, startSpace.length());
 		String leftRightSpace = getSpaceBetweenLeftRightBranch(height);
 		String rightLeftSpace = getSpaceBetweenRightLeftBranch(height);
 
-		brachesAtHeight.append(startSpace);
+		brachesAtHeight
+				.append(startSpace.substring(0, startSpace.length() - 1));
 
 		for (int i = 0; i < noOfNodesAtCurrentHeight; i++) {
 			brachesAtHeight.append("/").append(leftRightSpace).append("\\")
@@ -200,24 +203,26 @@ public class LeastCommonAncestor {
 
 		System.out.println(brachesAtHeight.toString());
 	}
-	
+
 	public static void prettyPrintTree(TreeNode root) {
-		Queue<TreeNode> queueOfNodes = new LinkedList<>();
+		LinkedList<TreeNode> queueOfNodes = new LinkedList<>();
 		int height = getMaximumHeight(root);
 		int level = 0;
 		int noOfNodesAtCurrentHeight = 0;
-		
+
 		queueOfNodes.add(root);
 
 		while (!queueOfNodes.isEmpty()) {
 			noOfNodesAtCurrentHeight = ((int) Math.pow(2, level));
 			printNodes(queueOfNodes, noOfNodesAtCurrentHeight, height - level);
-			printBranches(queueOfNodes, noOfNodesAtCurrentHeight, height - level);
+			printBranches(queueOfNodes, noOfNodesAtCurrentHeight, height
+					- level);
 			for (int i = 0; i < noOfNodesAtCurrentHeight; i++)
 				queueOfNodes.remove();
 			level++;
 		}
 	}
+
 	public static void main(String[] args) {
 		/*LeastCommonAncestor lca = new LeastCommonAncestor(Arrays.asList(4, 6,
 				12, 24, 8, 9, 1, 3));
