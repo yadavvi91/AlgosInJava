@@ -3,8 +3,13 @@ package com.yadavvi.prettyprint;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class PrettyPrintTree {
+
+	private static final String TRAILING_WHITESPACES = "\\s+$";
+	private static final Pattern END_OF_LINE_WHITESPACES = Pattern
+			.compile(TRAILING_WHITESPACES);
 
 	public TreeNode root;
 
@@ -117,7 +122,8 @@ public class PrettyPrintTree {
 			}
 		}
 
-		System.out.println(nodesAtHeight.toString().replaceFirst("\\s+$", ""));
+		System.out.println(END_OF_LINE_WHITESPACES.matcher(
+				nodesAtHeight.toString()).replaceFirst(""));
 	}
 
 	public static String getSpaceBetweenLeftRightBranch(int height) {
@@ -158,8 +164,8 @@ public class PrettyPrintTree {
 			}
 		}
 
-		System.out
-				.println(brachesAtHeight.toString().replaceFirst("\\s+$", ""));
+		System.out.println(END_OF_LINE_WHITESPACES.matcher(
+				brachesAtHeight.toString()).replaceFirst(""));
 	}
 
 	public static void prettyPrintTree(TreeNode root) {
