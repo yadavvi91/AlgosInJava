@@ -6,12 +6,10 @@ import java.util.List;
 
 public class PrettyPrintTree {
 
-	private List<Integer> listOfNodes;
 	public TreeNode root;
 
 	public PrettyPrintTree(List<Integer> list) {
-		listOfNodes = list;
-		root = createTree(listOfNodes);
+		root = createTree(list);
 	}
 
 	public static class TreeNode {
@@ -56,7 +54,7 @@ public class PrettyPrintTree {
 			return 0;
 		int leftHeight = getMaximumHeight(node.left);
 		int rightHeight = getMaximumHeight(node.right);
-		return (leftHeight > rightHeight) ? leftHeight + 1 : rightHeight + 1;
+		return (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
 	}
 
 	private static String getStartingSpace(int height) {
@@ -86,7 +84,7 @@ public class PrettyPrintTree {
 
 	private static String getSpaceBetweenTwoNodes(int height) {
 		int noOfNodesInSubTreeOfNode = ((int) Math.pow(2, height - 1)) / 2;
-		/** Sum of spaces of the subtrees of nodes + the parent node */
+		// Sum of spaces of the subtrees of nodes + the parent node
 		int noOfSpacesBetweenTwoNodes = noOfNodesInSubTreeOfNode * 2 + 1;
 
 		StringBuilder spaceBetweenNodesStringBuilder = new StringBuilder();
@@ -96,7 +94,7 @@ public class PrettyPrintTree {
 		return spaceBetweenNodesStringBuilder.toString();
 	}
 
-	private static void printNodes(LinkedList<TreeNode> queueOfNodes,
+	private static void printNodes(List<TreeNode> queueOfNodes,
 			int noOfNodesAtCurrentHeight, int height) {
 		StringBuilder nodesAtHeight = new StringBuilder();
 		String startSpace = getStartingSpace(height);
@@ -142,8 +140,7 @@ public class PrettyPrintTree {
 		return spaceBetweenLeftRightStringBuilder.toString();
 	}
 
-	private static void printBranches(LinkedList<TreeNode> queueOfNodes,
-			int noOfNodesAtCurrentHeight, int height) {
+	private static void printBranches(int noOfNodesAtCurrentHeight, int height) {
 		if (height <= 1)
 			return;
 		StringBuilder brachesAtHeight = new StringBuilder();
@@ -177,10 +174,10 @@ public class PrettyPrintTree {
 		while (!queueOfNodes.isEmpty() && level < height) {
 			noOfNodesAtCurrentHeight = ((int) Math.pow(2, level));
 			printNodes(queueOfNodes, noOfNodesAtCurrentHeight, height - level);
-			printBranches(queueOfNodes, noOfNodesAtCurrentHeight, height
-					- level);
-			for (int i = 0; i < noOfNodesAtCurrentHeight; i++)
+			printBranches(noOfNodesAtCurrentHeight, height - level);
+			for (int i = 0; i < noOfNodesAtCurrentHeight; i++) {
 				queueOfNodes.remove();
+			}
 			level++;
 		}
 	}
