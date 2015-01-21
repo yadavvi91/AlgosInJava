@@ -57,96 +57,88 @@ public class PrettyPrintTree {
 		return (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
 	}
 
-	private static String getStartingSpace(int height) {
-		int noOfSpaces = ((int) Math.pow(2, height - 1)) / 2;
-
-		StringBuilder startSpaceStringBuilder = new StringBuilder();
-		for (int i = 0; i < noOfSpaces; i++) {
-			// No. of spaces added everytime is the width of every node value
-			startSpaceStringBuilder.append("  ");
+	private static String multiplyString(String string, int times) {
+		StringBuilder builder = new StringBuilder(string.length() * times);
+		for (int i = 0; i < times; ++i) {
+			builder.append(string);
 		}
-		return startSpaceStringBuilder.toString();
+		return builder.toString();
 	}
 
-	private static String getUnderScores(int height) {
+	public static String getStartingSpace(int height) {
+		return multiplyString("  ", ((int) Math.pow(2, height - 1)) / 2);
+	}
+
+	public static String getUnderScores(int height) {
 		int noOfElementsToLeft = ((int) Math.pow(2, height) - 1) / 2;
 		int noOfUnderScores = noOfElementsToLeft
 				- ((int) Math.pow(2, height - 1) / 2);
 
-		StringBuilder underScoreStringBuilder = new StringBuilder();
-		for (int i = 0; i < noOfUnderScores; i++) {
-			// No. of underscores added everytime is the width of every node
-			// value
-			underScoreStringBuilder.append("__");
-		}
-		return underScoreStringBuilder.toString();
+		return multiplyString("__", noOfUnderScores);
 	}
 
-	private static String getSpaceBetweenTwoNodes(int height) {
+	public static String getSpaceBetweenTwoNodes(int height) {
+		if (height == 0)
+			return "";
+
 		int noOfNodesInSubTreeOfNode = ((int) Math.pow(2, height - 1)) / 2;
-		// Sum of spaces of the subtrees of nodes + the parent node
+		/** Sum of spaces of the subtrees of nodes + the parent node */
 		int noOfSpacesBetweenTwoNodes = noOfNodesInSubTreeOfNode * 2 + 1;
 
-		StringBuilder spaceBetweenNodesStringBuilder = new StringBuilder();
-		for (int i = 0; i < noOfSpacesBetweenTwoNodes; i++) {
-			spaceBetweenNodesStringBuilder.append("  ");
-		}
-		return spaceBetweenNodesStringBuilder.toString();
+		return multiplyString("  ", noOfSpacesBetweenTwoNodes);
 	}
 
-	private static void printNodes(List<TreeNode> queueOfNodes,
+	public static void printNodes(List<TreeNode> queueOfNodes,
 			int noOfNodesAtCurrentHeight, int height) {
 		StringBuilder nodesAtHeight = new StringBuilder();
+
 		String startSpace = getStartingSpace(height);
 		String spaceBetweenTwoNodes = getSpaceBetweenTwoNodes(height);
+
 		String underScore = getUnderScores(height);
+		String underScoreSpace = multiplyString(" ", underScore.length());
 
 		nodesAtHeight.append(startSpace);
-
 		for (int i = 0; i < noOfNodesAtCurrentHeight; i++) {
 			TreeNode node = (TreeNode) queueOfNodes.get(i);
-			if (node == null)
-				continue;
-			queueOfNodes.add(node.left);
-			queueOfNodes.add(node.right);
-			nodesAtHeight.append(underScore);
-			nodesAtHeight.append(String.format("%2d", node.value));
-			nodesAtHeight.append(underScore);
-			nodesAtHeight.append(spaceBetweenTwoNodes);
+			if (node == null) {
+				nodesAtHeight.append(underScoreSpace)
+						.append("  ")
+						.append(underScoreSpace)
+						.append(spaceBetweenTwoNodes);
+			} else {
+				nodesAtHeight
+						.append(node.left != null ? underScore
+								: underScoreSpace)
+						.append(String.format("%2d", node.value))
+						.append(node.right != null ? underScore
+								: underScoreSpace)
+						.append(spaceBetweenTwoNodes);
+			}
 		}
-		nodesAtHeight.substring(0, nodesAtHeight.length()
-				- spaceBetweenTwoNodes.length());
 
-		System.out.println(nodesAtHeight.toString());
+		System.out.println(nodesAtHeight.toString().replaceFirst("\\s+$", ""));
 	}
 
-	private static String getSpaceBetweenLeftRightBranch(int height) {
+	public static String getSpaceBetweenLeftRightBranch(int height) {
 		int noOfNodesBetweenLeftRightBranch = ((int) Math.pow(2, height - 1) - 1);
 
-		StringBuilder spaceBetweenLeftRightStringBuilder = new StringBuilder();
-		for (int i = 0; i < noOfNodesBetweenLeftRightBranch; i++) {
-			spaceBetweenLeftRightStringBuilder.append("  ");
-		}
-		return spaceBetweenLeftRightStringBuilder.toString();
+		return multiplyString("  ", noOfNodesBetweenLeftRightBranch);
 	}
 
-	private static String getSpaceBetweenRightLeftBranch(int height) {
+	public static String getSpaceBetweenRightLeftBranch(int height) {
 		int noOfNodesBetweenLeftRightBranch = (int) Math.pow(2, height - 1);
 
-		StringBuilder spaceBetweenLeftRightStringBuilder = new StringBuilder();
-		for (int i = 0; i < noOfNodesBetweenLeftRightBranch; i++) {
-			spaceBetweenLeftRightStringBuilder.append("  ");
-		}
-		return spaceBetweenLeftRightStringBuilder.toString();
+		return multiplyString("  ", noOfNodesBetweenLeftRightBranch);
 	}
 
-	private static void printBranches(int noOfNodesAtCurrentHeight, int height) {
+	public static void printBranches(List<TreeNode> queueOfNodes,
+			int noOfNodesAtCurrentHeight, int height) {
 		if (height <= 1)
 			return;
 		StringBuilder brachesAtHeight = new StringBuilder();
 
 		String startSpace = getStartingSpace(height);
-		// startSpace.substring(0, startSpace.length());
 		String leftRightSpace = getSpaceBetweenLeftRightBranch(height);
 		String rightLeftSpace = getSpaceBetweenRightLeftBranch(height);
 
@@ -154,13 +146,20 @@ public class PrettyPrintTree {
 				.append(startSpace.substring(0, startSpace.length() - 1));
 
 		for (int i = 0; i < noOfNodesAtCurrentHeight; i++) {
-			brachesAtHeight.append("/").append(leftRightSpace).append("\\")
-					.append(rightLeftSpace);
+			TreeNode node = queueOfNodes.get(i);
+			if (node == null) {
+				brachesAtHeight.append(" ").append(leftRightSpace).append(" ")
+						.append(rightLeftSpace);
+			} else {
+				brachesAtHeight.append(node.left != null ? "/" : " ")
+						.append(leftRightSpace)
+						.append(node.right != null ? "\\" : " ")
+						.append(rightLeftSpace);
+			}
 		}
-		brachesAtHeight.substring(0,
-				brachesAtHeight.length() - rightLeftSpace.length());
 
-		System.out.println(brachesAtHeight.toString());
+		System.out
+				.println(brachesAtHeight.toString().replaceFirst("\\s+$", ""));
 	}
 
 	public static void prettyPrintTree(TreeNode root) {
@@ -173,18 +172,29 @@ public class PrettyPrintTree {
 
 		while (!queueOfNodes.isEmpty() && level < height) {
 			noOfNodesAtCurrentHeight = ((int) Math.pow(2, level));
+
 			printNodes(queueOfNodes, noOfNodesAtCurrentHeight, height - level);
-			printBranches(noOfNodesAtCurrentHeight, height - level);
+			printBranches(queueOfNodes, noOfNodesAtCurrentHeight, height
+					- level);
+
 			for (int i = 0; i < noOfNodesAtCurrentHeight; i++) {
+				TreeNode currNode = queueOfNodes.peek();
 				queueOfNodes.remove();
+				if (currNode != null) {
+					queueOfNodes.add(currNode.left);
+					queueOfNodes.add(currNode.right);
+				} else {
+					queueOfNodes.add(null);
+					queueOfNodes.add(null);
+				}
 			}
 			level++;
 		}
 	}
 
 	public static void main(String[] args) {
-		PrettyPrintTree lcs = new PrettyPrintTree(Arrays.asList(30, 20, 40, 10,
-				25, 35, 50, 5, 15, 23, 28, 33, 38, 41, 55));
+		PrettyPrintTree lcs = new PrettyPrintTree(Arrays.asList(80, 30, 90, 20,
+				100, 99, 40, 10, 25, 35, 50, 5, 15, 23, 28, 33, 38, 41, 55));
 		PrettyPrintTree.prettyPrintTree(lcs.root);
 	}
 }
