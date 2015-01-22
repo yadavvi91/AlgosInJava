@@ -35,6 +35,7 @@ public class MergeSort {
 		int mid = lo + (hi - lo) / 2;
 		sort(a, aux, lo, mid);
 		sort(a, aux, mid + 1, hi);
+		// Merge the two sorted subarrays
 		merge(a, aux, lo, mid, hi);
 	}
 
