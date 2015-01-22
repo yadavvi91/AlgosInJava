@@ -2,6 +2,7 @@ package com.yadavvi.sort;
 
 public class MergeSort {
 
+	@SuppressWarnings("rawtypes")
 	private static void merge(Comparable[] a, Comparable[] aux, int lo,
 			int mid, int hi) {
 		for (int i = lo; i <= hi; i++) {
@@ -21,10 +22,12 @@ public class MergeSort {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static boolean less(Comparable v, Comparable w) {
 		return (v.compareTo(w) < 0);
 	}
 
+	@SuppressWarnings("rawtypes")
 	private static void sort(Comparable[] a, Comparable[] aux, int lo, int hi) {
 		if (hi <= lo)
 			return;
@@ -35,6 +38,7 @@ public class MergeSort {
 		merge(a, aux, lo, mid, hi);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static void sort(Comparable[] a) {
 		Comparable[] aux = new Comparable[a.length];
 		sort(a, aux, 0, a.length - 1);
