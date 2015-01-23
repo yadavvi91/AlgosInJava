@@ -21,6 +21,9 @@ public class LotteryUtils {
 		long rFactorial = 1;
 		long numeratorPart = 1;
 
+		if (n == r)
+			return 1;
+
 		for (int i = 0; i < r; i++) {
 			numeratorPart *= (n - i);
 		}
@@ -31,7 +34,12 @@ public class LotteryUtils {
 	}
 
 	public static long getPermutation(int n, int r) {
-		return getFactorial(n) / getFactorial(n - r);
+		if (n == r)
+			return getFactorial(n);
+		else {
+			System.out.println("Factorial n-r: " + getFactorial(n - r));
+			return getFactorial(n) / getFactorial(n - r);
+		}
 	}
 
 	public static long getNoOfDrawsForNotSortedNotUnique(int n, int r) {
