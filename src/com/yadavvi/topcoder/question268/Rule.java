@@ -1,5 +1,7 @@
 package com.yadavvi.topcoder.question268;
 
+import java.math.BigInteger;
+
 import javax.naming.directory.InvalidAttributesException;
 
 public class Rule implements Comparable<Rule> {
@@ -10,7 +12,7 @@ public class Rule implements Comparable<Rule> {
 	int noOfBlanks;
 	boolean isSorted;
 	boolean isUnique;
-	long numberOfOdds;
+	BigInteger numberOfOdds;
 
 	public Rule(String name, String[] conditions) {
 		this.name = name;
@@ -82,12 +84,7 @@ public class Rule implements Comparable<Rule> {
 
 	@Override
 	public int compareTo(Rule o) {
-		if (numberOfOdds < o.numberOfOdds)
-			return -1;
-		else if (numberOfOdds > o.numberOfOdds)
-			return 1;
-		else
-			return 0;
+		return numberOfOdds.compareTo(o.numberOfOdds);
 	}
 
 }

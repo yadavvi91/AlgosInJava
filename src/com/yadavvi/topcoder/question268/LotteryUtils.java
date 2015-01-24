@@ -1,61 +1,61 @@
 package com.yadavvi.topcoder.question268;
 
+import java.math.BigInteger;
+
 public class LotteryUtils {
-	private static long getPow(int n, int r) {
-		long noOfDraws = 1;
+	private static BigInteger getPow(int n, int r) {
+		BigInteger noOfDraws = new BigInteger("1");
 		for (int i = 0; i < r; i++) {
-			noOfDraws *= n;
+			noOfDraws = noOfDraws.multiply(BigInteger.valueOf(n));
 		}
 		return noOfDraws;
 	}
 
-	private static long getFactorial(int n) {
-		long factorial = 1;
+	private static BigInteger getFactorial(int n) {
+		BigInteger factorial = new BigInteger("1");
 		for (int i = 1; i <= n; i++) {
-			factorial *= i;
+			factorial = factorial.multiply(BigInteger.valueOf(i));
 		}
 		return factorial;
 	}
 
-	public static long getCombination(int n, int r) {
-		long rFactorial = 1;
-		long numeratorPart = 1;
+	public static BigInteger getCombination(int n, int r) {
+		BigInteger rFactorial = new BigInteger("1");
+		BigInteger numeratorPart = new BigInteger("1");
 
 		if (n == r)
-			return 1;
+			return new BigInteger("1");
 
 		for (int i = 0; i < r; i++) {
-			numeratorPart *= (n - i);
+			numeratorPart = numeratorPart.multiply(BigInteger.valueOf(n - i));
 		}
 
 		rFactorial = getFactorial(r);
 
-		return numeratorPart / rFactorial;
+		return numeratorPart.divide(rFactorial);
 	}
 
-	public static long getPermutation(int n, int r) {
+	public static BigInteger getPermutation(int n, int r) {
 		if (n == r)
 			return getFactorial(n);
-		else {
-			System.out.println("Factorial n-r: " + getFactorial(n - r));
-			return getFactorial(n) / getFactorial(n - r);
-		}
+		else
+			return getFactorial(n).divide(getFactorial(n - r));
 	}
 
-	public static long getNoOfDrawsForNotSortedNotUnique(int n, int r) {
+	public static BigInteger getNoOfDrawsForNotSortedNotUnique(int n, int r) {
 		return getPow(n, r);
 	}
 
-	public static long getNoOfDrawsForSortedNotUnique(int n, int r) {
-		return getNoOfDrawsForNotSortedNotUnique(n, r)
-				- getNoOfDrawsForSortedUnique(n, r);
+	public static BigInteger getNoOfDrawsForSortedNotUnique(int n, int r) {
+		// SEE: Stars and Bars (Combinatorics)
+		return getCombination(n + r - 1, r);
 	}
 
-	public static long getNoOfDrawsForNotSortedUnique(int n, int r) {
+	public static BigInteger getNoOfDrawsForNotSortedUnique(int n, int r) {
 		return getPermutation(n, r);
 	}
 
-	public static long getNoOfDrawsForSortedUnique(int n, int r) {
+	public static BigInteger getNoOfDrawsForSortedUnique(int n, int r) {
 		return getCombination(n, r);
 	}
 
