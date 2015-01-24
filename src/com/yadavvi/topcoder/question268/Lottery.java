@@ -12,19 +12,14 @@ public class Lottery {
 
 		for (int i = 0; i < rules.length; i++) {
 			rule[i] = parseStringAndCreateRule(rules[i]);
-
-			// Print the Rules
-			/*strBuilder.setLength(0);
-			strBuilder.append(rule[i].name + ": ");
-			for (String indRule : rule[i].conditions) {
-				strBuilder.append(indRule + ", ");
-			}
-			strBuilder.delete(strBuilder.length() - 2, strBuilder.length() - 1);
-			System.out.println(strBuilder.toString());*/
 		}
 
 		MergeSort.sort(rule);
+		// MergeSort is REQUIRED because we shouldn't change the order of Rules
+		// if 2 (or more) Rules have the same Odds. This is not guaranteed with
+		// Array.sort().
 		// Arrays.sort(rule);
+
 		String[] namesOfRules = new String[rule.length];
 		for (int i = 0; i < rule.length; i++) {
 			namesOfRules[i] = rule[i].name;
@@ -45,6 +40,5 @@ public class Lottery {
 
 		return new Rule(name, conditions);
 	}
-
 
 }

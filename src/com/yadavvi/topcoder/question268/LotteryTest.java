@@ -23,7 +23,6 @@ public class LotteryTest {
 	@Test
 	public void testGetPermutation() {
 		assertEquals(new BigInteger("90"), LotteryUtils.getPermutation(10, 2));
-		// assertEquals(90, LotteryUtils.getPermutation(10, 8));
 	}
 
 	@Test
@@ -51,10 +50,6 @@ public class LotteryTest {
 		for (int i = 0; i < lotteryTest.length; i++) {
 			assertEquals(lotteryTest[i], lotterySolution2[i]);
 		}
-		/*for (String str : lotteryTest) {
-			System.out.print(str + ", ");
-		}
-		System.out.println();*/
 
 		lotteryTest = lottery.sortByOdds(new String[] {});
 		assertEquals(lotteryTest.length, lotterySolution3.length);
