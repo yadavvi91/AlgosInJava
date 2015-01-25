@@ -8,7 +8,6 @@ public class Lottery {
 
 	public String[] sortByOdds(String[] rules) {
 		Rule[] rule = new Rule[rules.length];
-		StringBuilder strBuilder = new StringBuilder();
 
 		for (int i = 0; i < rules.length; i++) {
 			rule[i] = parseStringAndCreateRule(rules[i]);
@@ -23,12 +22,7 @@ public class Lottery {
 		String[] namesOfRules = new String[rule.length];
 		for (int i = 0; i < rule.length; i++) {
 			namesOfRules[i] = rule[i].name;
-			strBuilder.setLength(0);
-			strBuilder.append(rule[i].name + ": ");
-			strBuilder.append(rule[i].numberOfOdds + ",");
-			System.out.println(strBuilder.toString());
 		}
-		System.out.println();
 		return namesOfRules;
 	}
 
