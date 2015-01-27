@@ -14,9 +14,7 @@ public class Lottery {
 		}
 
 		MergeSort.sort(rule);
-		// MergeSort is REQUIRED because we shouldn't change the order of Rules
-		// if 2 (or more) Rules have the same Odds. This is not guaranteed with
-		// Array.sort().
+		// In fact, Arrays.sort() IS a stable sort, so we can use it too.
 		// Arrays.sort(rule);
 
 		String[] namesOfRules = new String[rule.length];

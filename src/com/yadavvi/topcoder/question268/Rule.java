@@ -66,25 +66,45 @@ public class Rule implements Comparable<Rule> {
 
 	}
 
+	public static BigInteger getNoOfDrawsForNotSortedNotUnique(int n, int r) {
+		return BigInteger.valueOf(n).pow(r);
+	}
+
+	public static BigInteger getNoOfDrawsForSortedNotUnique(int n, int r) {
+		// SEE: Stars and Bars (Combinatorics)
+		return LotteryUtils.combination(n + r - 1, r);
+	}
+
+	public static BigInteger getNoOfDrawsForNotSortedUnique(int n, int r) {
+		return LotteryUtils.permutation(n, r);
+	}
+
+	public static BigInteger getNoOfDrawsForSortedUnique(int n, int r) {
+		return LotteryUtils.combination(n, r);
+	}
+
 	private void calculateOdds() {
 		if (!isSorted && !isUnique) {
-			numberOfOdds = LotteryUtils.getNoOfDrawsForNotSortedNotUnique(
-					noOfChoices, noOfBlanks);
+			numberOfOdds = getNoOfDrawsForNotSortedNotUnique(noOfChoices,
+					noOfBlanks);
 		} else if (isSorted && !isUnique) {
-			numberOfOdds = LotteryUtils.getNoOfDrawsForSortedNotUnique(
-					noOfChoices, noOfBlanks);
+			numberOfOdds = getNoOfDrawsForSortedNotUnique(noOfChoices,
+					noOfBlanks);
 		} else if (!isSorted && isUnique) {
-			numberOfOdds = LotteryUtils.getNoOfDrawsForNotSortedUnique(
-					noOfChoices, noOfBlanks);
+			numberOfOdds = getNoOfDrawsForNotSortedUnique(noOfChoices,
+					noOfBlanks);
 		} else if (isSorted && isUnique) {
-			numberOfOdds = LotteryUtils.getNoOfDrawsForSortedUnique(
-					noOfChoices, noOfBlanks);
+			numberOfOdds = getNoOfDrawsForSortedUnique(noOfChoices, noOfBlanks);
 		}
 	}
 
 	@Override
 	public int compareTo(Rule o) {
-		return numberOfOdds.compareTo(o.numberOfOdds);
+		if (numberOfOdds.compareTo(o.numberOfOdds) == 0) {
+			return name.compareTo(o.name);
+		} else {
+			return numberOfOdds.compareTo(o.numberOfOdds);
+		}
 	}
 
 }

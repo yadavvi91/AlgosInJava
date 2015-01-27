@@ -9,20 +9,26 @@ import org.junit.Test;
 public class LotteryTest {
 
 	@Test
+	public void testFactorial() {
+		assertEquals(BigInteger.ONE, LotteryUtils.factorial(0));
+		assertEquals(BigInteger.ONE, LotteryUtils.factorial(1));
+	}
+
+	@Test
 	public void testGetCombination() {
-		assertEquals(new BigInteger("45"), LotteryUtils.getCombination(10, 2));
-		assertEquals(new BigInteger("1"), LotteryUtils.getCombination(10, 10));
-		assertEquals(new BigInteger("1"), LotteryUtils.getCombination(10, 0));
-		assertEquals(new BigInteger("210"), LotteryUtils.getCombination(10, 4));
-		assertEquals(new BigInteger("210"), LotteryUtils.getCombination(10, 6));
-		assertEquals(new BigInteger("252"), LotteryUtils.getCombination(10, 5));
-		assertEquals(LotteryUtils.getCombination(11, 6),
-				LotteryUtils.getCombination(11, 5));
+		assertEquals(new BigInteger("45"), LotteryUtils.combination(10, 2));
+		assertEquals(BigInteger.ONE, LotteryUtils.combination(10, 10));
+		assertEquals(BigInteger.ONE, LotteryUtils.combination(10, 0));
+		assertEquals(new BigInteger("210"), LotteryUtils.combination(10, 4));
+		assertEquals(new BigInteger("210"), LotteryUtils.combination(10, 6));
+		assertEquals(new BigInteger("252"), LotteryUtils.combination(10, 5));
+		assertEquals(LotteryUtils.combination(11, 6),
+				LotteryUtils.combination(11, 5));
 	}
 
 	@Test
 	public void testGetPermutation() {
-		assertEquals(new BigInteger("90"), LotteryUtils.getPermutation(10, 2));
+		assertEquals(new BigInteger("90"), LotteryUtils.permutation(10, 2));
 	}
 
 	@Test
